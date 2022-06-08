@@ -5,10 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -32,20 +34,28 @@ fun MainScreen() {
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            HorizontalColoredBar(Color.Magenta)
-            HorizontalColoredBar(Color.Red)
-            HorizontalColoredBar(Color.Green)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                ColoredSquare(Color.Magenta, "1")
+                ColoredSquare(Color.Red, "2")
+            }
+
+            ColoredSquare(Color.Green, "3")
+            ColoredSquare(Color.Yellow, "4")
+            ColoredSquare(Color.White, "5")
         }
     }
 }
 
 @Composable
-fun HorizontalColoredBar(color: Color) {
+fun ColoredSquare(color: Color, text: String) {
     Surface(
         color = color,
-        modifier = Modifier.size(600.dp, 100.dp)
+        modifier = Modifier.size(100.dp, 100.dp)
     ) {
-
+        Text(text = "$text UI", textAlign = TextAlign.Center)
     }
 }
 
