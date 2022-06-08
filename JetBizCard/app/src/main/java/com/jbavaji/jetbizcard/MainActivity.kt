@@ -3,10 +3,7 @@ package com.jbavaji.jetbizcard
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,10 +27,10 @@ fun MainScreen() {
         color = Color.DarkGray,
         modifier = Modifier.fillMaxSize(),
     ) {
-        Row(
+        Column(
             modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             HorizontalColoredBar(Color.Magenta)
             HorizontalColoredBar(Color.Red)
@@ -46,7 +43,7 @@ fun MainScreen() {
 fun HorizontalColoredBar(color: Color) {
     Surface(
         color = color,
-        modifier = Modifier.size(60.dp, 600.dp)
+        modifier = Modifier.size(600.dp, 100.dp)
     ) {
 
     }
