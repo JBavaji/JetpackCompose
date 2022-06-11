@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,9 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
+import coil.request.ImageRequest
+import coil.size.Size
 import com.jbavaji.jetbizcard.ui.theme.MyTheme
 import com.jbavaji.jetbizcard.ui.theme.lightGreen
 
@@ -64,7 +68,7 @@ class LazyColumnListActivity : ComponentActivity() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
-                ProfilePicture(userProfile.drawableId, userProfile.status)
+                ProfilePicture(userProfile.drawableUrl, userProfile.status)
                 ProfileContent(userProfile.name, userProfile.status)
             }
         }
@@ -99,7 +103,7 @@ class LazyColumnListActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun ProfilePicture(drawableId: Int, onlineStatus: Boolean) {
+    private fun ProfilePicture(drawableId: String, onlineStatus: Boolean) {
         Card(
             shape = CircleShape,
             border = BorderStroke(
@@ -111,12 +115,23 @@ class LazyColumnListActivity : ComponentActivity() {
             modifier = Modifier.padding(16.dp),
             elevation = 4.dp
         ) {
-            Image(
-                painter = painterResource(id = drawableId),
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(drawableId)
+                    .crossfade(true)
+                    .size(Size.ORIGINAL)
+                    .build(),
                 modifier = Modifier.size(72.dp),
                 contentScale = ContentScale.Crop,
                 contentDescription = ""
-            )
+            ) {
+                val state = painter.state
+                if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
+                    CircularProgressIndicator()
+                } else {
+                    SubcomposeAsyncImageContent()
+                }
+            }
         }
     }
 
