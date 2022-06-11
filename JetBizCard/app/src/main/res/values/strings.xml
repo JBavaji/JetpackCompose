@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">JetBizCard</string>
     <string name="title_activity_dynamic_content">DynamicContentActivity</string>
+    <string name="title_activity_lazy_column_list">LazyColumnListActivity</string>
 </resources>
