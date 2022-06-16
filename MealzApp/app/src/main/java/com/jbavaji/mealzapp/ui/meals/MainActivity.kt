@@ -9,9 +9,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.jbavaji.mealzapp.model.response.MealsCategoriesResponse
+import com.jbavaji.mealzapp.model.response.MealsCategoryResponse
 import com.jbavaji.mealzapp.ui.theme.MealzAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -34,8 +39,18 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MealsCategoriesScreen() {
     val viewModel: MealsCategoriesViewModel = viewModel()
-    val meals = viewModel.getMeals()
-    Text(text = "Hello ${meals.size}!")
+    val rememberedMeals: MutableState<List<MealsCategoryResponse>> = remember {
+        mutableStateOf(emptyList<MealsCategoryResponse>())
+    }
+
+    viewModel.getMeals(){ meals: MealsCategoriesResponse? ->
+        meals?.let {
+            rememberedMeals.value = it.categories
+        }
+    }
+
+    Text(text = "Hello ${rememberedMeals.value}!")
+
 }
 
 @Preview(showBackground = true)
