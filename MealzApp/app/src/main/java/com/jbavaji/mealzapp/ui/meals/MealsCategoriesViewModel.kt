@@ -3,23 +3,18 @@ package com.jbavaji.mealzapp.ui.meals
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.jbavaji.mealzapp.model.MealsRepository
 import com.jbavaji.mealzapp.model.response.MealsCategoryResponse
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class MealsCategoriesViewModel(
     private val repository: MealsRepository = MealsRepository()
 ) : ViewModel() {
 
-    private val mealsJob = Job()
-
     init {
-        //  Custom Scope using Job
-        val scope = CoroutineScope(mealsJob + Dispatchers.IO)
-        scope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             mealsState.value = getMeals()
         }
     }
@@ -32,10 +27,5 @@ class MealsCategoriesViewModel(
 
     fun getMealsData(): List<MealsCategoryResponse> {
         return mealsState.value
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        mealsJob.cancel()
     }
 }
