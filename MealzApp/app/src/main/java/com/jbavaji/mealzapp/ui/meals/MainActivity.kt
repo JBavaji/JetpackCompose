@@ -9,16 +9,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.jbavaji.mealzapp.model.response.MealsCategoriesResponse
 import com.jbavaji.mealzapp.model.response.MealsCategoryResponse
 import com.jbavaji.mealzapp.ui.theme.MealzAppTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,16 +41,19 @@ fun MealsCategoriesScreen() {
     val rememberedMeals: MutableState<List<MealsCategoryResponse>> = remember {
         mutableStateOf(emptyList<MealsCategoryResponse>())
     }
+    val coroutineScope = rememberCoroutineScope()
 
-    viewModel.getMeals() { meals: MealsCategoriesResponse? ->
-        meals?.let {
-            rememberedMeals.value = it.categories
+    // to avoid multiple launch, call once when composable init very first time
+    LaunchedEffect(key1 = "GET_MEALS") {
+        coroutineScope.launch(Dispatchers.IO) {
+            val meals = viewModel.getMeals()
+            rememberedMeals.value = meals
         }
     }
 
     LazyColumn {
         items(rememberedMeals.value) { meal ->
-            Text(text = "${meal.name} - ")
+            Text(text = "${meal.name} - ${meal.description} \n")
         }
     }
 }
