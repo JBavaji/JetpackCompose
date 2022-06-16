@@ -27,18 +27,18 @@ import com.jbavaji.mealzapp.model.response.dummyMealsCategoriesResponse
 import com.jbavaji.mealzapp.ui.theme.MealzAppTheme
 
 @Composable
-fun MealsCategoriesScreen() {
+fun MealsCategoriesScreen(navigationCallback: (String) -> Unit) {
     val viewModel: MealsCategoriesViewModel = viewModel()
     val meals = viewModel.getMealsData()
 
     LazyColumn(contentPadding = PaddingValues(16.dp)) {
-        items(meals) { meal -> MealCategory(meal = meal) }
+        items(meals) { meal -> MealCategory(meal = meal, navigationCallback) }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MealCategory(meal: MealsCategoryResponse) {
+fun MealCategory(meal: MealsCategoryResponse, navigationCallback: (String) -> Unit) {
     var isExpanded = remember {
         mutableStateOf(false)
     }
@@ -48,6 +48,7 @@ fun MealCategory(meal: MealsCategoryResponse) {
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 16.dp)
+            .clickable { navigationCallback(meal.id) }
     ) {
         Row(modifier = Modifier.animateContentSize()) {
             AsyncImage(
@@ -100,6 +101,8 @@ fun MealCategory(meal: MealsCategoryResponse) {
 @Composable
 fun MealsCategoriesScreenPreview() {
     MealzAppTheme {
-        MealCategory(dummyMealsCategoriesResponse[0])
+        MealCategory(dummyMealsCategoriesResponse[0]) {
+
+        }
     }
 }
