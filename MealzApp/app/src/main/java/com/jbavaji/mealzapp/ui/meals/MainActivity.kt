@@ -3,8 +3,9 @@ package com.jbavaji.mealzapp.ui.meals
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,14 +44,17 @@ fun MealsCategoriesScreen() {
         mutableStateOf(emptyList<MealsCategoryResponse>())
     }
 
-    viewModel.getMeals(){ meals: MealsCategoriesResponse? ->
+    viewModel.getMeals() { meals: MealsCategoriesResponse? ->
         meals?.let {
             rememberedMeals.value = it.categories
         }
     }
 
-    Text(text = "Hello ${rememberedMeals.value}!")
-
+    LazyColumn {
+        items(rememberedMeals.value) { meal ->
+            Text(text = "${meal.name} - ")
+        }
+    }
 }
 
 @Preview(showBackground = true)
